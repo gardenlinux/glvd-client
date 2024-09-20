@@ -32,7 +32,7 @@ jobs:
   build_arm:
     runs-on: ubuntu-latest
     env:
-      GOOARCH: arm64
+      GOARCH: arm64
     steps:
     - uses: actions/checkout@v4
 
