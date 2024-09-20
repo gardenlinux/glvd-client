@@ -23,3 +23,21 @@ jobs:
 
     - name: Test
       run: go test -v ./...
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: glvd-client
+        path: glvd-client
+
+  run_in_gl:
+    runs-on: ubuntu-latest
+    container: ghcr.io/gardenlinux/gardenlinux:1592.1
+    needs:
+      - build
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/download-artifact@v4
+    - run: cat /etc/os-release
+    - run: ls -lR
+    - run: chmod +x glvd-client/glvd-client
+    - run: ./glvd-client/glvd-client

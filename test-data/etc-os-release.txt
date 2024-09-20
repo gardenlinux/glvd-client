@@ -1,0 +1,11 @@
+ID=gardenlinux
+NAME="Garden Linux"
+PRETTY_NAME="Garden Linux 1592.1"
+HOME_URL="https://gardenlinux.io"
+SUPPORT_URL="https://github.com/gardenlinux/gardenlinux"
+BUG_REPORT_URL="https://github.com/gardenlinux/gardenlinux/issues"
+GARDENLINUX_CNAME=container-arm64-1592.1
+GARDENLINUX_FEATURES=_slim,base,container
+GARDENLINUX_VERSION=1592.1
+GARDENLINUX_COMMIT_ID=f269ecdf
+GARDENLINUX_COMMIT_ID_LONG=f269ecdf9e0bc0f48f6fde3aeed60786e13dded5
