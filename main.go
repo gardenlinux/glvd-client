@@ -90,7 +90,7 @@ type payload struct {
 func getCvesForPackageList(dpkgSourcePackages []string, gardenLinuxVersion string) []sourcePackageCve {
 	client := &http.Client{}
 	requestPayload, _ := json.Marshal(payload{PackageNames: dpkgSourcePackages})
-	req, err := http.NewRequest("PUT", "https://glvd.ingress.glvd.gardnlinux.shoot.canary.k8s-hana.ondemand.com/v1/cves/1592.0/packages?sortBy=cveId&sortOrder=ASC", bytes.NewBuffer(requestPayload))
+	req, err := http.NewRequest("PUT", "https://glvd.ingress.glvd.gardnlinux.shoot.canary.k8s-hana.ondemand.com/v1/cves/"+gardenLinuxVersion+"/packages?sortBy=cveId&sortOrder=ASC", bytes.NewBuffer(requestPayload))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -109,7 +109,7 @@ func getCvesForPackageList(dpkgSourcePackages []string, gardenLinuxVersion strin
 	var results []sourcePackageCve
 	err = json.Unmarshal(bodyText, &results)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	return results
 }
@@ -122,21 +122,32 @@ func readGardenLinuxVersion(osReleaseFilePath string) string {
 
 	lines := strings.Split(string(dat), "\n")
 	for _, line := range lines {
-		if strings.HasPrefix("GARDENLINUX_VERSION=", line) {
+		if strings.HasPrefix(line, "GARDENLINUX_VERSION=") {
 			return strings.Replace(line, "GARDENLINUX_VERSION=", "", 1)
 		}
 	}
-	panic("")
+	log.Fatal("Could not parse os-release, failed to identify Garden Linux version.")
+	return ""
 }
 
 func main() {
 
-	// fixme: have a proper setup for running with test data so it can be used on non-Garden Linux hosts for development and testing
-	dpkgSourcePackages := getDpkgSourcePackages("/var/lib/dpkg/status")
-	// dpkgSourcePackages := getDpkgSourcePackages("test-data/var-lib-dpkg-status.txt")
+	devMode := os.Getenv("GLVD_CLIENT_DEV_MODE")
+	var dpkgStatusFilePath string
+	var etcOsReleaseFilePath string
 
-	gardenLinuxVersion := readGardenLinuxVersion("/etc/os-release")
-	// gardenLinuxVersion := readGardenLinuxVersion("test-data/etc-os-release.txt")
+	if len(devMode) > 0 {
+		println("Running in dev mode")
+		dpkgStatusFilePath = "test-data/var-lib-dpkg-status.txt"
+		etcOsReleaseFilePath = "test-data/etc-os-release.txt"
+	} else {
+		dpkgStatusFilePath = "/var/lib/dpkg/status"
+		etcOsReleaseFilePath = "/etc/os-release"
+	}
+
+	dpkgSourcePackages := getDpkgSourcePackages(dpkgStatusFilePath)
+
+	gardenLinuxVersion := readGardenLinuxVersion(etcOsReleaseFilePath)
 
 	cves := getCvesForPackageList(dpkgSourcePackages, gardenLinuxVersion)
 
