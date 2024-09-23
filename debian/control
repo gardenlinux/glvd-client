@@ -1,0 +1,17 @@
+Source: glvd
+Section: misc
+Priority: optional
+Maintainer: Garden Linux <contact@gardenlinux.io>
+Build-Depends:
+ debhelper-compat (= 13),
+ git,
+ golang,
+Standards-Version: 4.6.0
+Rules-Requires-Root: no
+
+Package: glvd
+Architecture: any
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+Description: foo

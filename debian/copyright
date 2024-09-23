@@ -1,0 +1,6 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Source: https://github.com/gardenlinux/glvd-client
+
+Files: *
+Copyright: 
+License: MIT

@@ -1,0 +1,27 @@
+#!/usr/bin/make -f
+
+include /usr/share/dpkg/pkg-info.mk
+
+export GOARCH = $(DEB_HOST_ARCH_CPU)
+export GOOS = $(DEB_HOST_ARCH_OS)
+export GOCACHE = $(CURDIR)/debian/.go-cache
+export CGO_ENABLED = 0
+export GIT_COMMIT  = $(shell git rev-parse HEAD)
+export GIT_DIRTY   = $(shell test -n "`git status --porcelain`" && echo "dirty" || echo "clean")
+
+source:
+	# vendor all modules so we have a self-contained source
+	go mod vendor
+
+%:
+	dh $@ --buildsystem=none
+
+override_dh_auto_build:
+	go build -v ./...
+
+override_dh_auto_clean:
+	go clean
+
+# Should be disabled by default and breaks (https://bugs.debian.org/1016563)
+override_dh_dwz:
+	:
