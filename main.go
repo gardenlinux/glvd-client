@@ -164,7 +164,7 @@ func main() {
 	programName := os.Args[0]
 
 	if len(args) == 0 {
-		fmt.Printf("Usage: %s [what-if vim frr|check]", programName)
+		fmt.Printf("Usage: %s <command> <args>\nCommands: what-if, check\nArgs: List of source packages for command what-if\n", programName)
 		os.Exit(0)
 	}
 
