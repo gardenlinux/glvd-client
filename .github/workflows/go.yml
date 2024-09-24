@@ -65,3 +65,4 @@ jobs:
     - run: chmod +x glvd-client/glvd-client
     - run: ./glvd-client/glvd-client check
     - run: ./glvd-client/glvd-client what-if frr vim
+    - run: ./glvd-client/glvd-client executive-summary
