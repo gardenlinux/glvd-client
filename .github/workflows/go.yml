@@ -63,4 +63,5 @@ jobs:
     - run: cat /etc/os-release
     - run: ls -lR
     - run: chmod +x glvd-client/glvd-client
-    - run: ./glvd-client/glvd-client
+    - run: ./glvd-client/glvd-client check
+    - run: ./glvd-client/glvd-client what-if frr vim
