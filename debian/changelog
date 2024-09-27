@@ -1,5 +1,11 @@
+glvd (0.0.1) unstable; urgency=medium
+
+  * Document executive-summary command in help text
+
+  -- Garden Linux <contact@gardenlinux.io>
+
 glvd (0.0.0) unstable; urgency=medium
 
-  * WIP glvd is in development
+  * Initial glvd client
 
   -- Garden Linux <contact@gardenlinux.io>
