@@ -10,14 +10,13 @@ export GIT_COMMIT  = $(shell git rev-parse HEAD)
 export GIT_DIRTY   = $(shell test -n "`git status --porcelain`" && echo "dirty" || echo "clean")
 
 source:
-	# vendor all modules so we have a self-contained source
-	go mod vendor
+	:
 
 %:
 	dh $@ --buildsystem=none
 
 override_dh_auto_build:
-	go build -v ./...
+	go build -o debian/.go-build/glvd .
 
 override_dh_auto_clean:
 	go clean
