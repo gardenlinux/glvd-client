@@ -183,6 +183,10 @@ func main() {
 			dpkgSourcePackages := getDpkgSourcePackages(dpkgStatusFilePath)
 			cves = getCvesForPackageList(dpkgSourcePackages, gardenLinuxVersion)
 			printCves(cves, jsonOutput)
+		case "executive-summary":
+			dpkgSourcePackages := getDpkgSourcePackages(dpkgStatusFilePath)
+			cves = getCvesForPackageList(dpkgSourcePackages, gardenLinuxVersion)
+			fmt.Printf("This machine has %d potential security issues\nRun `%s check` to get the full list\n", len(cves), programName)
 		}
 
 	}
