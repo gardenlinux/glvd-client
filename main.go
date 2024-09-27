@@ -130,7 +130,22 @@ func readGardenLinuxVersion(osReleaseFilePath string) string {
 	return ""
 }
 
+func printCves(cves []sourcePackageCve, jsonOutput bool) {
+	if jsonOutput {
+		output, err := json.MarshalIndent(cves, " ", " ")
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(string(output))
+	} else {
+		for _, cve := range cves {
+			fmt.Printf("%-18s %4.1f %-46s %-20s %-20s\n", cve.CveId, cve.BaseScore, cve.VectorString, cve.SourcePackageName, cve.SourcePackageVersion)
+		}
+	}
+}
+
 func main() {
+	jsonOutput := strings.ToLower(os.Getenv("GLVD_CLIENT_JSON_OUTPUT")) == "true"
 
 	devMode := os.Getenv("GLVD_CLIENT_DEV_MODE")
 	var dpkgStatusFilePath string
@@ -145,14 +160,30 @@ func main() {
 		etcOsReleaseFilePath = "/etc/os-release"
 	}
 
-	dpkgSourcePackages := getDpkgSourcePackages(dpkgStatusFilePath)
+	args := os.Args[1:]
+	programName := os.Args[0]
 
-	gardenLinuxVersion := readGardenLinuxVersion(etcOsReleaseFilePath)
-
-	cves := getCvesForPackageList(dpkgSourcePackages, gardenLinuxVersion)
-
-	for _, cve := range cves {
-		fmt.Printf("%-18s %4.1f %-46s %-20s %-20s\n", cve.CveId, cve.BaseScore, cve.VectorString, cve.SourcePackageName, cve.SourcePackageVersion)
+	if len(args) == 0 {
+		fmt.Printf("Usage: %s <command> <args>\nCommands: what-if, check\nArgs: List of source packages for command what-if\n", programName)
+		os.Exit(0)
 	}
 
+	if len(args) >= 1 {
+		command := args[0]
+
+		gardenLinuxVersion := readGardenLinuxVersion(etcOsReleaseFilePath)
+		var cves []sourcePackageCve
+
+		switch command {
+		case "what-if":
+			packagesToCheck := args[1:]
+			cves = getCvesForPackageList(packagesToCheck, gardenLinuxVersion)
+			printCves(cves, jsonOutput)
+		case "check":
+			dpkgSourcePackages := getDpkgSourcePackages(dpkgStatusFilePath)
+			cves = getCvesForPackageList(dpkgSourcePackages, gardenLinuxVersion)
+			printCves(cves, jsonOutput)
+		}
+
+	}
 }
