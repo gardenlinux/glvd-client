@@ -1,2 +1,2 @@
-version_suffix=unreleased`date +%s`
+version_suffix=.`date +%s`gl~dev
 import_src .
