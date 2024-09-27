@@ -1,2 +1,2 @@
-version_suffix=.`date +%s`gl~dev
 import_src .
+version_suffix=gl1
