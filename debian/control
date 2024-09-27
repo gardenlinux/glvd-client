@@ -14,4 +14,4 @@ Architecture: any
 Depends:
  ${shlibs:Depends},
  ${misc:Depends},
-Description: foo
+Description: CLI for glvd
